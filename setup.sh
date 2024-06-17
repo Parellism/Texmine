@@ -2,5 +2,4 @@
 pip install -r requirements.txt
 
 # Download NLTK data
-python -m nltk.downloader stopwords
-python -m nltk.downloader wordnet
+python -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet')"
