@@ -1,11 +1,14 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import re
 import string
 import pickle
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+
 
 # Function to clean text
 def clean_text(text):
@@ -18,7 +21,8 @@ def lemmatize_text(token_list):
     all_stopwords.remove('not')
     return " ".join([lemmatizer.lemmatize(token) for token in token_list if not token in set(all_stopwords)])
 
-# Load data\
+# Load data
+@st.cache_data
 def load_data():
     data = pd.read_csv("tripadvisor_hotel_reviews.csv")
     return data
@@ -42,17 +46,70 @@ def count_punct(text):
     count = sum([1 for char in text if char in string.punctuation])
     return round(count / (len(text) - text.count(" ")), 3) * 100
 
+# Main function to run the app
+def main():
+    st.title("Hotel Review Analysis")
+    st.subheader("Data Exploration")
+
+    # Load data
+    data = load_data()
+
+    # Preprocess data
+    df = preprocess_data(data)
+
+    # Show data
+    if st.checkbox("Show Data"):
+        st.write(df.head())
+
+    # Show distribution of ratings
+    st.subheader("Distribution of Ratings")
+    st.bar_chart(df['rating'].value_counts())
+
+    # Show distribution of review length
+    st.subheader("Distribution of Review Length")
+    fig = px.histogram(df, x='review_len', nbins=50, title='Distribution of Review Length',
+                       labels={'review_len': 'Review Length', 'count': 'Frequency'})
+    fig.update_layout(xaxis_title='Review Length', yaxis_title='Frequency')
+    st.plotly_chart(fig)
+
+    # Filter positive, neutral, and negative reviews
+    filtered_positive = " ".join(df[df['label'] == 1]['lemmatized_review'])
+    filtered_negative = " ".join(df[df['label'] == 0]['lemmatized_review'])
+
+    # Show word cloud for positive reviews
+    st.subheader("Positive Reviews Word Cloud")
+    wordcloud = WordCloud(max_font_size=160, margin=0, background_color="white", colormap="Greens").generate(filtered_positive)
+    plt.figure(figsize=[10, 10])
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.margins(x=0, y=0)
+    plt.title("Positive Reviews Word Cloud")
+    st.pyplot(plt)
+
+    # Show word cloud for negative reviews
+    st.subheader("Negative Reviews Word Cloud")
+    wordcloud = WordCloud(max_font_size=160, margin=0, background_color="white", colormap="Reds").generate(filtered_negative)
+    plt.figure(figsize=[10, 10])
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.margins(x=0, y=0)
+    plt.title("Negative Reviews Word Cloud")
+    st.pyplot(plt)
 
 # Second Page for Sentiment Analysis
-def main():
+def sentiment_analysis():
     st.title("Logistic Regression")
     st.subheader("Predict Sentiment")
 
     # Load the pre-trained model and TfidfVectorizer
     with open('modellr.sav', 'rb') as f:
         modellr = pickle.load(f)
-    tfidf_vectorizer = pickle.load(open('tfidf_vectorizer.pkl','rb'))
-    pca = pickle.load(open('PCA.pkl','rb'))
+
+    with open('tfidf_vectorizer.pkl', 'rb') as f:
+        tfidf_vectorizer = pickle.load(f)
+
+    with open('PCA.pkl', 'rb') as f:
+        pca = pickle.load(f)
 
     comment = st.text_input('Enter your review text here:', value="")
     
@@ -92,4 +149,6 @@ def main():
             st.write("Please enter a review text.")
 
 if __name__ == "__main__":
-    main()
+    pages = {"Data Exploration": main, "Sentiment Analysis": sentiment_analysis}
+    selection = st.sidebar.radio("Go to", list(pages.keys()))
+    pages[selection]()
