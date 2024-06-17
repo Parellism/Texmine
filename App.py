@@ -67,10 +67,12 @@ def main():
 
     # Show distribution of review length
     st.subheader("Distribution of Review Length")
-    fig = px.histogram(df, x='review_len', nbins=50, title='Distribution of Review Length',
-                       labels={'review_len': 'Review Length', 'count': 'Frequency'})
-    fig.update_layout(xaxis_title='Review Length', yaxis_title='Frequency')
-    st.plotly_chart(fig)
+    fig, ax = plt.subplots()
+    ax.hist(df['review_len'], bins=50)
+    ax.set_title('Distribution of Review Length')
+    ax.set_xlabel('Review Length')
+    ax.set_ylabel('Frequency')
+    st.pyplot(fig)
 
     # Filter positive, neutral, and negative reviews
     filtered_positive = " ".join(df[df['label'] == 1]['lemmatized_review'])
