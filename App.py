@@ -53,14 +53,9 @@ def main():
     st.subheader("Predict Sentiment")
 
     # Load the pre-trained model and TfidfVectorizer
-    with open('modellr.sav', 'rb') as f:
-        modellr = pickle.load(f)
-
-    with open('tfidf_vectorizer.pkl', 'rb') as f:
-        tfidf_vectorizer = pickle.load(f)
-
-    with open('PCA.pkl', 'rb') as f:
-        pca = pickle.load(f)
+    modellr = pickle.load(open('modellr.sav','rb'))
+    tfidf_vectorizer = pickle.load(open('tfidf_vectorizer.pkl','rb'))
+    pca = pickle.load(open('PCA.pkl','rb'))
 
     comment = st.text_input('Enter your review text here:', value="")
     
