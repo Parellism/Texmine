@@ -4,7 +4,6 @@ import re
 import string
 import pickle
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
