@@ -2,3 +2,5 @@ pandas
 matplotlib
 scikit-learn
 nltk
+plotly
+wordcloud
