@@ -48,7 +48,7 @@ def count_punct(text):
 
 
 # Second Page for Sentiment Analysis
-def sentiment_analysis():
+def main():
     st.title("Logistic Regression")
     st.subheader("Predict Sentiment")
 
@@ -98,3 +98,6 @@ def sentiment_analysis():
             st.write("Prediction:", sentiment_lr)
         else:
             st.write("Please enter a review text.")
+
+if __name__ == "__main__":
+    main()
