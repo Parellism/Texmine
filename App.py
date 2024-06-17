@@ -9,6 +9,9 @@ from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
+# Download NLTK data
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 # Function to clean text
 def clean_text(text):
