@@ -53,7 +53,8 @@ def main():
     st.subheader("Predict Sentiment")
 
     # Load the pre-trained model and TfidfVectorizer
-    modellr = pickle.load(open('modellr.sav','rb'))
+    with open('modellr.sav', 'rb') as f:
+        modellr = pickle.load(f)
     tfidf_vectorizer = pickle.load(open('tfidf_vectorizer.pkl','rb'))
     pca = pickle.load(open('PCA.pkl','rb'))
 
