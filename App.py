@@ -7,6 +7,11 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords')
+
 # Function to clean text
 def clean_text(text):
     return re.sub('[^a-zA-Z]', ' ', text).lower()
