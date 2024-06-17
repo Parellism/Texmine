@@ -98,8 +98,3 @@ def sentiment_analysis():
             st.write("Prediction:", sentiment_lr)
         else:
             st.write("Please enter a review text.")
-
-if __name__ == "__main__":
-    pages = {"Data Exploration": main, "Sentiment Analysis": sentiment_analysis}
-    selection = st.sidebar.radio("Go to", list(pages.keys()))
-    pages[selection]()
