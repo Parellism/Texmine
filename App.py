@@ -20,8 +20,7 @@ def lemmatize_text(token_list):
     all_stopwords.remove('not')
     return " ".join([lemmatizer.lemmatize(token) for token in token_list if not token in set(all_stopwords)])
 
-# Load data
-@st.cache_data
+# Load data\
 def load_data():
     data = pd.read_csv("tripadvisor_hotel_reviews.csv")
     return data
